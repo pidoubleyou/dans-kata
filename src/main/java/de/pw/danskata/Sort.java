@@ -1,7 +1,7 @@
 package de.pw.danskata;
 
 import org.jgrapht.GraphPath;
-import org.jgrapht.alg.tour.NearestNeighborHeuristicTSP;
+import org.jgrapht.alg.tour.*;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
@@ -28,14 +28,56 @@ public class Sort {
   }
 
   public static Tuning[] sortNearestNeighborTSP(List<Tuning> tunings) {
-    final SimpleWeightedGraph<Tuning, DefaultWeightedEdge> graph = createGraph(tunings);
-
     NearestNeighborHeuristicTSP<Tuning, DefaultWeightedEdge> alg =
         new NearestNeighborHeuristicTSP<>(tunings.get(0));
+    return sort(tunings, alg);
+  }
+
+
+  public static Tuning[] sortChristofidisTSP(List<Tuning> tunings) {
+    ChristofidesThreeHalvesApproxMetricTSP<Tuning, DefaultWeightedEdge> alg =
+            new ChristofidesThreeHalvesApproxMetricTSP<>();
+    return sort(tunings, alg);
+  }
+
+  public static Tuning[] sortPalmerHamiltonian(List<Tuning> tunings) {
+    PalmerHamiltonianCycle<Tuning, DefaultWeightedEdge> alg = new PalmerHamiltonianCycle<>();
+    return sort(tunings, alg);
+  }
+
+  public static Tuning[] sortNearestInsertion(List<Tuning> tunings) {
+    NearestInsertionHeuristicTSP<Tuning, DefaultWeightedEdge> alg = new NearestInsertionHeuristicTSP<>();
+    return sort(tunings, alg);
+  }
+
+  public static Tuning[] sortHeldKarp(List<Tuning> tunings) {
+    HeldKarpTSP<Tuning, DefaultWeightedEdge> alg = new HeldKarpTSP<>();
+    return sort(tunings, alg);
+  }
+
+  public static Tuning[] sortGreedyHeuristicTSP(List<Tuning> tunings) {
+    GreedyHeuristicTSP<Tuning, DefaultWeightedEdge> alg = new GreedyHeuristicTSP<>();
+    return sort(tunings, alg);
+  }
+
+  private static Tuning[] sort(List<Tuning> tunings, HamiltonianCycleAlgorithmBase<Tuning, DefaultWeightedEdge> alg) {
+    final SimpleWeightedGraph<Tuning, DefaultWeightedEdge> graph = createGraph(tunings);
 
     final GraphPath<Tuning, DefaultWeightedEdge> tour = alg.getTour(graph);
-    List<Tuning> vertexList = tour.getVertexList().subList(0, 9);
+    List<Tuning> vertexList = reorder(tour.getVertexList(), tunings.get(0));
     return vertexList.toArray(Tuning[]::new);
+  }
+
+  private static List<Tuning> reorder(List<Tuning> vertexList, Tuning start) {
+    final int startIndex = vertexList.indexOf(start);
+    if (startIndex == 0) {
+      return vertexList.subList(0, vertexList.size() - 1);
+    }
+
+    List<Tuning> reorderList = new ArrayList<>();
+    reorderList.addAll(vertexList.subList(startIndex, vertexList.size()));
+    reorderList.addAll(vertexList.subList(1, startIndex));
+    return reorderList;
   }
 
   private static SimpleWeightedGraph<Tuning, DefaultWeightedEdge> createGraph(

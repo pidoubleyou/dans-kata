@@ -12,6 +12,11 @@ public class Program {
 
     print("cheapest", Sort.sortCheapest(Arrays.stream(tunings).collect(Collectors.toList())));
     print("nearest neighbor TSP", Sort.sortNearestNeighborTSP(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("nearest insertion TSP", Sort.sortNearestInsertion(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("Christofidis TSP", Sort.sortChristofidisTSP(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("Palmer Hamiltonian", Sort.sortPalmerHamiltonian(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("Held Karp", Sort.sortHeldKarp(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("Greedy Heuristic", Sort.sortGreedyHeuristicTSP(Arrays.stream(tunings).collect(Collectors.toList())));
   }
 
   private static void print(String method, Tuning[] actual) {
