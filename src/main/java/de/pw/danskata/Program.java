@@ -11,6 +11,7 @@ public class Program {
     Tuning[] tunings = TuningsParser.parse(DANS_PATTERN);
 
     print("cheapest", Sort.sortCheapest(Arrays.stream(tunings).collect(Collectors.toList())));
+    print("nearest neighbor TSP", Sort.sortNearestNeighborTSP(Arrays.stream(tunings).collect(Collectors.toList())));
   }
 
   private static void print(String method, Tuning[] actual) {
